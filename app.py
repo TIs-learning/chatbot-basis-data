@@ -13,10 +13,13 @@ llm_client = OpenAI(
     base_url="https://api.groq.com/openai/v1/"
 ) 
 
-# 3. Setup ChromaDB (Sesuaikan path karena app.py ada di dalam 07-capstone)
-chroma_client = chromadb.PersistentClient(path="./buku_pengantar_basis_data_full")
-collection = chroma_client.get_collection(name="pengantar_basis_data_full")
+# 3. Setup ChromaDB (Panggil folder database buku lu DENGAN CACHE)
+@st.cache_resource
+def load_database():
+    chroma_client = chromadb.PersistentClient(path="./buku_pengantar_basis_data_full")
+    return chroma_client.get_collection(name="pengantar_basis_data_full")
 
+collection = load_database()
 # 4. Tes Tampilan UI Streamlit
 st.title("Chatbot Pengantar Basis Data 🤖")
 st.write("Status: Database dan LLM berhasil disambungkan!")
